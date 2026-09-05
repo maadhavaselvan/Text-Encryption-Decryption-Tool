@@ -1,3 +1,4 @@
+from Caesar import Caesar
 def choice(name):
     while True:
         print(f"1.{name} Text")
@@ -38,10 +39,20 @@ while True:
         continue
     if x==1:
         y,z=choice("Encrypt")
-        if (y == 1):
+        if (y==1):
+            while(True):
+                if(z==1 or z==2):
+                    try:
+                        int_shift=int(input("Enter The Integer Shift:"))
+                    except ValueError:
+                        print("Please Enter a Number")
+                        continue
+                    break
             if (z == 1):
-                pass
-                # call Encrypt text caesar file
+                encrypt=Caesar(int_shift)
+                text=input("Enter The Text to be encrypted:")
+                encrypt_text=encrypt.Text_Encryption(text)
+                print(encrypt_text)
             else:
                 pass
                 # call Encrypt file caesar file
