@@ -1,14 +1,22 @@
 from Cipher import Cipher
-class Caesar(Cipher):
+class Vignere(Cipher):
+    count = 0
     def __init__(self, key):
         super().__init__(key)
+    def Key_Verification(self):
+        if(self.key.isalpha()):
+            return True
+        else:
+            return False
     def Text_Encryption(self,text):
         letters=list(text)
         for i in range(len(letters)):
             if("A"<=letters[i]<="Z"):
-                letters[i]=chr(ord("A")+(ord(letters[i])-ord("A")+int(self.key))%26)
+                letters[i]=chr(ord("A")+(ord(letters[i])-ord("A")+(ord(self.key[self.count].lower()))-ord("a"))%26)
+                self.count = (self.count + 1) % (len(self.key))
             elif("a"<=letters[i]<="z"):
-                letters[i]=chr(ord("a")+(ord(letters[i])-ord("a")+int(self.key))%26)
+                letters[i]=chr(ord("a")+(ord(letters[i])-ord("a")+(ord(self.key[self.count].lower()))-ord("a"))%26)
+                self.count = (self.count + 1) % (len(self.key))
         text="".join(letters)
         return text
     def File_Encryption(self,file_name,dest_file_name=None):

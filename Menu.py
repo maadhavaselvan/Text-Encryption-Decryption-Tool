@@ -1,4 +1,5 @@
 from Caesar import Caesar
+from Vignere import Vignere
 import os
 import random
 def two_choice():
@@ -35,9 +36,9 @@ def file_path(text):
 def corrected_path(p):
     return os.path.expanduser(p.strip().strip("'\""))
 def Caesar_Key():
-    while (True):
-        key = input("Enter Key:")
-        encrypt = Caesar(key)
+    while True:
+        key=input("Enter Key:")
+        encrypt=Caesar(key)
         if (encrypt.Key_Verification()):
             if (0 < int(encrypt.key) < 26):
                 break
@@ -46,6 +47,37 @@ def Caesar_Key():
         else:
             print("Enter only numbers")
     return Caesar(key)
+def Vignere_key():
+    while True:
+        key=input("Enter Key:")
+        encrypt=Vignere(key)
+        if (encrypt.Key_Verification()):
+            break
+        else:
+            print("Enter only alphabets in Key")
+    return Vignere(key)
+
+def Key(z,r):
+    if (z == 1):
+        if (r == 1):
+            encrypt = Caesar(random.randint(1, 25))
+            print("Value of Key: ", encrypt.key)
+        else:
+            encrypt = Caesar_Key()
+    else:
+        if (r == 1):
+            key = ""
+            for i in range(random.randint(10, 20)):
+                j = random.randint(1, 2)
+                if (j == 1):
+                    key += chr(random.randint(67, 90))
+                else:
+                    key += chr(random.randint(97, 122))
+            encrypt = Vignere(key)
+            print("Value of Key: ", encrypt.key)
+        else:
+            encrypt = Vignere_key()
+    return encrypt
 while True:
     print("="*300)
     print(" "*120,"CIPHER TOOL - Caesar and Vignere")
@@ -60,49 +92,33 @@ while True:
         continue
     if x==1:
         y,z,r=choice("Encrypt")
+        encrypt = Key(z, r)
         if (y==1):
             text=input("Enter The Text to be encrypted:")
-            if (z==1):
-                if(r==1):
-                    encrypt=Caesar(random.randint(1,25))
-                else:
-                    encrypt=Caesar_Key()
-                    encrypt_text = encrypt.Text_Encryption(text)
-                    print(encrypt_text)
-            else:
-                pass
-                # call Encrypt Vignere Text
-
+            encrypt_text = encrypt.Text_Encryption(text)
+            print(encrypt_text)
         else:
-            if (z==1):
-                path=file_path("Enter file path of file to be encrypted:")
-                if(r==1):
-                    encrypt=Caesar(random.randint(1,25))
-                else:
-                    encrypt=Caesar_Key()
-                print("1.Do you want to Encrypt in same file")
-                print("2.Do you want to Encrypt in different file")
-                file_choice=two_choice()
-                if file_choice==1:
-                    encrypt.File_Encryption(path)
-                else:
-                    while(True):
-                        dest_path=input(("Enter file path of destination file:"))
-                        dest_path=corrected_path(dest_path)
-                        try:
-                            with open(dest_path, "w") as f:
-                                pass
-                        except:
-                            print("Enter correct file path")
-                            continue
-                        break
-                    encrypt.File_Encryption(path,dest_path)
-                print("Text is Encrypted")
+            path = file_path("Enter file path of file to be encrypted:")
+            print("1.Do you want to Encrypt in same file")
+            print("2.Do you want to Encrypt in different file")
+            file_choice=two_choice()
+            if file_choice==1:
+                encrypt.File_Encryption(path)
             else:
-                pass
-                # call Encrypt file vignere file
+                while(True):
+                    dest_path=input(("Enter file path of destination file:"))
+                    dest_path=corrected_path(dest_path)
+                    try:
+                        with open(dest_path, "w") as f:
+                            pass
+                    except:
+                        print("Enter correct file path")
+                        continue
+                    break
+                encrypt.File_Encryption(path,dest_path)
+            print("Text is Encrypted")
     elif x==2:
-        y,z=choice("Decrypt")
+        y,z,r=choice("Decrypt")
         if (y==1):
             if (z==1):
                 pass
