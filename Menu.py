@@ -83,7 +83,8 @@ while True:
                     encrypt.File_Encryption(path)
                 else:
                     while(True):
-                        dest_path = input(("Enter file path of destination file:"))
+                        dest_path=input(("Enter file path of destination file:"))
+                        corrected_path(dest_path)
                         try:
                             with open(dest_path, "w") as f:
                                 pass
