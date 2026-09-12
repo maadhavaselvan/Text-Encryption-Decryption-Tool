@@ -18,6 +18,13 @@ class Caesar(Cipher):
                 lines[i]=self.Text_Encryption(lines[i])
         with open(file_name,"w") as f:
             f.writelines(lines)
+    def File_Encryption(self,file_name,dest_file_name):
+        with open(file_name,"r") as f:
+            lines=f.readlines()
+            for i in range(len(lines)):
+                lines[i]=self.Text_Encryption(lines[i])
+        with open(dest_file_name,"w") as f2:
+            f2.writelines(lines)
 
             
 

@@ -1,23 +1,8 @@
 from Caesar import Caesar
 import os
 import random
-
-def choice(name):
-    while True:
-        print(f"1.{name} Text")
-        print(f"2.{name} File")
-        try:
-            y=int(input("Enter Your Choice:"))
-        except ValueError:
-            print("Please enter a number")
-            continue
-        if (y!=1 and y!=2):
-            print("Enter Either 1 or 2")
-            continue
-        break
+def two_choice():
     while (True):
-        print("1.Caesar")
-        print("2.Vignere")
         try:
             z=int(input("Enter Your Choice:"))
         except ValueError:
@@ -27,21 +12,26 @@ def choice(name):
             print("Enter Either 1 or 2")
             continue
         break
-    while (True):
-        print("1.With Randomised Key")
-        print("2.With Known Key")
-        try:
-            r=int(input("Enter Your Choice:"))
-        except ValueError:
-            print("Please enter a number")
-            continue
-        if (r!=1 and r!=2):
-            print("Enter Either 1 or 2")
-            continue
-        break
+    return z
+def choice(name):
+    print(f"1.{name} Text")
+    print(f"2.{name} File")
+    y=two_choice()
+    print("1.Caesar")
+    print("2.Vignere")
+    z=two_choice()
+    print("1.With Randomised Key")
+    print("2.With Known Key")
+    r=two_choice()
     return y,z,r
-
-
+def file_path(text):
+    while True:
+        path=input(text)
+        new_path=corrected_path(path)
+        if (os.path.isfile(new_path)):
+            break
+        print("File doesn't exist Please Try Again")
+    return new_path
 def corrected_path(p):
     return os.path.expanduser(p.strip().strip("'\""))
 
@@ -81,16 +71,26 @@ while True:
                 # call Encrypt file caesar file
         else:
             if (z==1):
-                while True:
-                    path=input("Enter file path:")
-                    if(os.path.isfile(corrected_path(path))):
-                        break
-                    print("File doesn't exist Please Try Again")
+                path=file_path("Enter file path of file to be encrypted:")
                 if(r==1):
                     encrypt=Caesar(random.randint(1,25))
                 else:
                     encrypt=Caesar_Encrypt()
-                encrypt_text=encrypt.File_Encryption(path)
+                print("1.Do you want to Encrypt in same file")
+                print("2.Do you want to Encrypt in different file")
+                file_choice=two_choice()
+                if file_choice==1:
+                    encrypt.File_Encryption(path)
+                else:
+                    while(True):
+                        dest_path = input(("Enter file path of destination file:"))
+                        try:
+                            with open(dest_path, "w") as f:
+                                pass
+                        except FileNotFoundError:
+                            print("Enter correct file path")
+                        break
+                    encrypt.File_Encryption(path,dest_path)
                 print("Text is Encrypted")
             else:
                 pass
