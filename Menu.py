@@ -34,15 +34,18 @@ def file_path(text):
     return new_path
 def corrected_path(p):
     return os.path.expanduser(p.strip().strip("'\""))
-
-def Caesar_Encrypt():
+def Caesar_Key():
     while (True):
-        try:
-            int_shift=int(input("Enter The Integer Shift:"))
-            return Caesar(int_shift)
-        except ValueError:
-            print("Please Enter a Number")
-            continue
+        key = input("Enter Key:")
+        encrypt = Caesar(key)
+        if (encrypt.Key_Verification()):
+            if (0 < int(encrypt.key) < 26):
+                break
+            else:
+                print("Please enter value from 1 to 25")
+        else:
+            print("Enter only numbers")
+    return Caesar(key)
 while True:
     print("="*300)
     print(" "*120,"CIPHER TOOL - Caesar and Vignere")
@@ -58,24 +61,25 @@ while True:
     if x==1:
         y,z,r=choice("Encrypt")
         if (y==1):
+            text=input("Enter The Text to be encrypted:")
             if (z==1):
-                text=input("Enter The Text to be encrypted:")
                 if(r==1):
                     encrypt=Caesar(random.randint(1,25))
                 else:
-                    encrypt=Caesar_Encrypt()
-                encrypt_text=encrypt.Text_Encryption(text)
-                print(encrypt_text)
+                    encrypt=Caesar_Key()
+                    encrypt_text = encrypt.Text_Encryption(text)
+                    print(encrypt_text)
             else:
                 pass
-                # call Encrypt file caesar file
+                # call Encrypt Vignere Text
+
         else:
             if (z==1):
                 path=file_path("Enter file path of file to be encrypted:")
                 if(r==1):
                     encrypt=Caesar(random.randint(1,25))
                 else:
-                    encrypt=Caesar_Encrypt()
+                    encrypt=Caesar_Key()
                 print("1.Do you want to Encrypt in same file")
                 print("2.Do you want to Encrypt in different file")
                 file_choice=two_choice()
@@ -84,12 +88,13 @@ while True:
                 else:
                     while(True):
                         dest_path=input(("Enter file path of destination file:"))
-                        corrected_path(dest_path)
+                        dest_path=corrected_path(dest_path)
                         try:
                             with open(dest_path, "w") as f:
                                 pass
-                        except FileNotFoundError:
+                        except:
                             print("Enter correct file path")
+                            continue
                         break
                     encrypt.File_Encryption(path,dest_path)
                 print("Text is Encrypted")
