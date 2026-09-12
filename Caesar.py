@@ -11,3 +11,13 @@ class Caesar(Cipher):
                 letters[i]=chr(ord("a")+(ord(letters[i])-ord("a")+self.key)%26)
         text="".join(letters)
         return text
+    def File_Encryption(self,file_name):
+        with open(file_name,"r") as f:
+            lines=f.readlines()
+            for i in range(len(lines)):
+                lines[i]=self.Text_Encryption(lines[i])
+        with open(file_name,"w") as f:
+            f.writelines(lines)
+
+            
+
