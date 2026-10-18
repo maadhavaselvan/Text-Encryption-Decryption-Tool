@@ -9,7 +9,6 @@ class Vignere(Cipher):
         else:
             return False
     def Text(self,text,decrypt=False):
-        self.count=0
         letters=list(text)
         for i in range(len(letters)):
             if("A"<=letters[i]<="Z"):

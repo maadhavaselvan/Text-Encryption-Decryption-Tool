@@ -99,6 +99,88 @@ def Key(cipher,rand_known):
         else:
             encrypt = Vignere_key()
     return encrypt
+def remove_non_letter(text):
+    new_text = ""
+    for i in text:
+        if('a'<=i.lower()<='z'):
+            new_text += i.lower()
+    return new_text
+def zero_ic():
+    ic={}
+    for i in range(ord('a'),ord('z')+1):
+        ic[chr(i)]=0
+    return ic
+def Average_IC(k_len,text):
+    c_num=0
+    step=0
+    ic=zero_ic()
+    c_ic=[]
+    temp=0
+    c_len=0
+    while(c_num<k_len):
+        while(c_num+(step*k_len)<len(text)):
+            ic[text[c_num+(step*k_len)]]+=1
+            c_len+=1
+            step += 1
+        c_num+=1
+        step=0
+        for i in ic.values():
+            temp+=i*(i-1)
+        if(c_len>1):
+            temp/=(c_len*(c_len-1))
+        else:
+            temp=0
+        c_ic.append(temp)
+        temp=0
+        ic=zero_ic()
+        c_len=0
+    temp=0
+    for i in c_ic:
+        temp+=i
+    if(len(c_ic)>0):
+        return temp/(len(c_ic))
+    return 0
+
+def freq_letter(text,start,k_len):
+    letter_freq=zero_ic()
+    letter=start
+    N=0
+    while (letter < len(text)):
+        letter_freq[text[letter]] += 1
+        letter+=k_len
+        N+=1
+    return N,letter_freq
+def chi_square_value(text,start,k_len):
+    N,observed_freq=freq_letter(text,start,k_len)
+    expected_freq=zero_ic()
+    chi_square=0
+    freq = {'a': 0.08167, 'b': 0.01492, 'c': 0.02782, 'd': 0.04253, 'e': 0.12702, 'f': 0.02228, 'g': 0.02015,
+            'h': 0.06095, 'i': 0.06966, 'j': 0.00153, 'k': 0.00772, 'l': 0.04025, 'm': 0.02406, 'n': 0.06749,
+            'o': 0.07507, 'p': 0.01929, 'q': 0.00095, 'r': 0.05987, 's': 0.06327, 't': 0.09056, 'u': 0.02758,
+            'v': 0.00978, 'w': 0.0236, 'x': 0.0015, 'y': 0.01974, 'z': 0.00074}
+    for i in expected_freq.keys():
+        expected_freq[i]+=N*freq[i]
+    for i in observed_freq.keys():
+        chi_square+=((observed_freq[i]-expected_freq[i])**2)/expected_freq[i]
+    return chi_square
+
+def min_chi_square(text,start,k_len):
+    all_chi_square=zero_ic()
+    for i in range(26):
+        ceasar_cipher=Caesar(i)
+        new_text=ceasar_cipher.Text(text,True)
+        all_chi_square[chr(ord('a')+i)]=chi_square_value(new_text,start,k_len)
+    min=None
+    min_shift=""
+    for i in all_chi_square.keys():
+        if(min==None):
+            min=all_chi_square[i]
+            min_shift=i
+        else:
+            if(min>all_chi_square[i]):
+                min=all_chi_square[i]
+                min_shift=i
+    return min_shift
 
 def encrypt_decrypt(Name,decrypt=False):
     if(decrypt==False):
@@ -130,6 +212,63 @@ def encrypt_decrypt(Name,decrypt=False):
                         continue
                 Cipher_crypt.File(path,dest_path,decrypt)
             print(f"Text is {Name}ed")
+    else:
+        text=""
+        path=""
+        if(text_file==1):
+            text = input(f"Enter The Text to be Decrypted:")
+        else:
+            path = file_path(f"Enter file path of file to be Decrypted:")
+            with open(path, "r") as f:
+                text = f.read()
+        clean_text = remove_non_letter(text)
+        all_ic={}
+        max=None
+        length_key=0
+        for i in range(1,21):
+            temp=Average_IC(i,clean_text)
+            if temp is not None:
+                if(max==None):
+                    max=temp
+                elif(max<temp):
+                    max=temp
+                all_ic[i]=temp
+        for i in all_ic.keys():
+            if(all_ic[i]>=(0.9*max)):
+                length_key=i
+                break
+        key=""
+        for i in range(length_key):
+            key+=min_chi_square(clean_text,i,length_key)
+        Cipher=Vignere(key)
+        if(text_file==1):
+            final=Cipher.Text(text,decrypt)
+            print(final)
+        else:
+            print(f"1.Do you want to {Name} in same file")
+            print(f"2.Do you want to {Name} in different file")
+            file_choice = two_choice()
+            if file_choice == 1:
+                Cipher.File(path,None,decrypt)
+            else:
+                while (True):
+                    dest_path = input("Enter file path of destination file:")
+                    dest_path = corrected_path(dest_path)
+                    try:
+                        with open(dest_path, "w") as f:
+                            break
+                    except:
+                        print("Enter correct file path")
+                        continue
+                Cipher.File(path,dest_path,decrypt)
+            print(f"Text is {Name}ed")
+
+
+
+
+
+
+
 
 while True:
     print("="*300)
