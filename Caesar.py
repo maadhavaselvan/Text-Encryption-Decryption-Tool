@@ -2,6 +2,7 @@ from Cipher import Cipher
 class Caesar(Cipher):
     def __init__(self, key):
         super().__init__(key)
+
     def Text(self,text,decrypt=False):
         letters=list(text)
         for i in range(len(letters)):
@@ -17,6 +18,7 @@ class Caesar(Cipher):
                     letters[i]=chr(ord("a")+(ord(letters[i])-ord("a")+int(self.key))%26)
         text="".join(letters)
         return text
+
     def File(self,file_name,dest_file_name=None,decrypt=False):
         with open(file_name,"r") as f:
             lines=f.readlines()

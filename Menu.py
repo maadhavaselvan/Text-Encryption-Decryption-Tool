@@ -46,14 +46,10 @@ def choice_decrypt():
 def file_path(text):
     while True:
         path=input(text)
-        new_path=corrected_path(path)
-        if (os.path.isfile(new_path)):
+        if (os.path.isfile(path)):
             break
         print("File doesn't exist Please Try Again")
-    return new_path
-
-def corrected_path(p):
-    return os.path.expanduser(p.strip().strip("'\""))
+    return path
 
 def Caesar_Key():
     while True:
@@ -66,7 +62,7 @@ def Caesar_Key():
                 print("Please enter value from 1 to 25")
         else:
             print("Enter only numbers")
-    return Caesar(key)
+    return encrypt
 
 def Vignere_key():
     while True:
@@ -76,7 +72,7 @@ def Vignere_key():
             break
         else:
             print("Enter only alphabets in Key")
-    return Vignere(key)
+    return encrypt
 
 def Key(cipher,rand_known):
     if (cipher == 1):
@@ -99,17 +95,20 @@ def Key(cipher,rand_known):
         else:
             encrypt = Vignere_key()
     return encrypt
+
 def remove_non_letter(text):
     new_text = ""
     for i in text:
         if('a'<=i.lower()<='z'):
             new_text += i.lower()
     return new_text
+
 def zero_ic():
     ic={}
     for i in range(ord('a'),ord('z')+1):
         ic[chr(i)]=0
     return ic
+
 def Average_IC(k_len,text):
     c_num=0
     step=0
@@ -150,6 +149,7 @@ def freq_letter(text,start,k_len):
         letter+=k_len
         N+=1
     return N,letter_freq
+
 def chi_square_value(text,start,k_len):
     N,observed_freq=freq_letter(text,start,k_len)
     expected_freq=zero_ic()
@@ -203,7 +203,6 @@ def encrypt_decrypt(Name,decrypt=False):
             else:
                 while (True):
                     dest_path = input("Enter file path of destination file:")
-                    dest_path = corrected_path(dest_path)
                     try:
                         with open(dest_path, "w") as f:
                             break
@@ -253,7 +252,6 @@ def encrypt_decrypt(Name,decrypt=False):
             else:
                 while (True):
                     dest_path = input("Enter file path of destination file:")
-                    dest_path = corrected_path(dest_path)
                     try:
                         with open(dest_path, "w") as f:
                             break
@@ -262,13 +260,6 @@ def encrypt_decrypt(Name,decrypt=False):
                         continue
                 Cipher.File(path,dest_path,decrypt)
             print(f"Text is {Name}ed")
-
-
-
-
-
-
-
 
 while True:
     print("="*300)

@@ -3,11 +3,13 @@ class Vignere(Cipher):
     def __init__(self, key):
         super().__init__(key)
         self.count=0
+
     def Key_Verification(self):
         if(self.key.isalpha()):
             return True
         else:
             return False
+
     def Text(self,text,decrypt=False):
         letters=list(text)
         for i in range(len(letters)):
@@ -25,6 +27,7 @@ class Vignere(Cipher):
                 self.count = (self.count + 1) % (len(self.key))
         text="".join(letters)
         return text
+
     def File(self,file_name,dest_file_name=None,decrypt=False):
         self.count=0
         with open(file_name,"r") as f:
